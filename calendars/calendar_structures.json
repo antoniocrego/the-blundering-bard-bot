@@ -1,0 +1,17 @@
+{
+    "gehenna":{
+        "months": [
+            { "name": "Luminara", "length": 44 },
+            { "name": "Pandemonis", "length": 45 },
+            { "name": "Cinderveil", "length": 41 },
+            { "name": "Bishamon", "length": 45 },
+            { "name": "Regnum", "length": 45 },
+            { "name": "Jovialis", "length": 45 },
+            { "name": "Tempestra", "length": 40 },
+            { "name": "Oddleap", "length": 40 },
+            { "name": "Pantheonix", "length": 52 }
+        ],
+        "weekdays": ["Nephira", "Tartalion", "Chronor", "Zephyris", "Azuran", "Barnadun", "Mythorian"],
+        "starting_weekday": 0
+    }
+}
