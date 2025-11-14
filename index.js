@@ -1,5 +1,5 @@
 const { Client, GatewayIntentBits, Collection } = require('discord.js');
-const { listCampaignCalendars, listCalendarStructures } = require('./lib/calendar.js');
+const { listCampaignCalendars, listCalendarStructures, loadCampaignCalendar, loadCampaignCalendarStructure, generateMonthView } = require('./lib/calendar.js');
 const fs = require('fs');
 require('dotenv').config();
 
@@ -47,6 +47,65 @@ client.on('interactionCreate', async (interaction) => {
         await interaction.respond(choices);
         return;
     }
+
+    if (interaction.isButton()) {
+        const id = interaction.customId;
+        if (!id.startsWith('cal_')) return; // not our button
+
+        // id formats:
+        // cal_prev__<encName>__<year>__<month>
+        // cal_next__<encName>__<year>__<month>
+        // cal_today__<encName>
+        const parts = id.split('__');
+        const action = parts[0]; // e.g. 'cal_prev' or 'cal_today' or 'cal_next'
+        const encName = parts[1];
+        const campaignName = decodeURIComponent(encName);
+
+        // load current saved state
+        const campaign = await loadCampaignCalendar(campaignName);
+        if (!campaign) {
+            return interaction.reply({ content: '❌ Campaign not found.', ephemeral: true });
+        }
+        const structure = await loadCampaignCalendarStructure(campaign);
+
+        let year, monthIndex;
+        if (action === 'cal_today') {
+            year = campaign.year;
+            monthIndex = campaign.monthIndex;
+        } else {
+            // parts: ['cal_prev'|'cal_next', encName, yearStr, monthStr]
+            year = parseInt(parts[2], 10);
+            monthIndex = parseInt(parts[3], 10);
+
+            if (action === 'cal_prev') {
+            monthIndex -= 1;
+            if (monthIndex < 0) { monthIndex = structure.months.length - 1; year -= 1; }
+            } else if (action === 'cal_next') {
+            monthIndex += 1;
+            if (monthIndex >= structure.months.length) { monthIndex = 0; year += 1; }
+            }
+        }
+
+        // normalize again just in case
+        while (monthIndex < 0) { monthIndex += structure.months.length; year -= 1; }
+        while (monthIndex >= structure.months.length) { monthIndex -= structure.months.length; year += 1; }
+
+        const calendarBody = generateMonthView(structure, campaign, year, monthIndex);
+        const text = '```\n' + calendarBody + '\n```';
+
+        // rebuild buttons with updated state
+        const enc = encodeURIComponent(campaignName);
+        const row = new (require('discord.js')).ActionRowBuilder().addComponents(
+            new (require('discord.js')).ButtonBuilder().setCustomId(`cal_prev__${enc}__${year}__${monthIndex}`).setLabel('⬅️ Prev').setStyle(require('discord.js').ButtonStyle.Primary),
+            new (require('discord.js')).ButtonBuilder().setCustomId(`cal_today__${enc}`).setLabel('🏠 Today').setStyle(require('discord.js').ButtonStyle.Secondary),
+            new (require('discord.js')).ButtonBuilder().setCustomId(`cal_next__${enc}__${year}__${monthIndex}`).setLabel('Next ➡️').setStyle(require('discord.js').ButtonStyle.Primary)
+        );
+
+        // update the same message
+        return interaction.update({ content: text, components: [row] });
+    }
+
+
 
     if (!interaction.isChatInputCommand()) return;
 

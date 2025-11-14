@@ -32,9 +32,9 @@ INSERT INTO structures (name, data) VALUES (
             { "name": "Pantheonix", "length": 52 }
         ],
         "weekdays": ["Nephira", "Tartalion", "Chronor", "Zephyris", "Azuran", "Barnadun", "Mythorian"],
-        "starting_weekday": 2,
+        "startingWeekday": 2,
         "moons": [
-            { "name": "Luna", "cycleLength": 29, "offset": 0}
+            { "name": "Luna", "cycleLength": 31, "offset": 0}
         ]
     }'::jsonb
 )
@@ -59,9 +59,9 @@ INSERT INTO structures (name, data) VALUES (
             { "name": "December", "length": 31 }
         ],
         "weekdays": ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"],
-        "starting_weekday": 0,
+        "startingWeekday": 0,
         "moons": [
-            { "name": "The Moon", "cycleLength": 29, "offset": 0}
+            { "name": "The Moon", "cycleLength": 31, "offset": 0}
         ]
     }'::jsonb
 )
