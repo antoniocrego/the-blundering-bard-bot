@@ -5,10 +5,10 @@ module.exports = {
   data: new SlashCommandBuilder()
     .setName('advance')
     .setDescription('Advance a campaign by N days')
-    .addStringOption(o => o.setName('campaign').setDescription('campaign name').setRequired(true))
+    .addStringOption(o => o.setName('campaign').setDescription('campaign name').setRequired(true).setAutocomplete(true))
     .addIntegerOption(o => o.setName('days').setDescription('number of days').setRequired(true)),
   async execute(interaction) {
-    const name = interaction.options.getString('campaign').toLowerCase();
+    const name = interaction.options.getString('campaign');
     const days = interaction.options.getInteger('days');
 
     const c = await loadCampaignCalendarWithStructure(name);

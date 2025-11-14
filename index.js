@@ -1,4 +1,5 @@
 const { Client, GatewayIntentBits, Collection } = require('discord.js');
+const { listCampaignCalendars, listCalendarStructures } = require('./lib/calendar.js');
 const fs = require('fs');
 require('dotenv').config();
 
@@ -23,7 +24,31 @@ client.on('ready', () => {
     console.log(`Logged in as ${client.user.tag}`);
 });
 
+const autocompleteSources = {
+    campaign: listCampaignCalendars,
+    structure: listCalendarStructures
+}
+
 client.on('interactionCreate', async (interaction) => {
+    console.log("interaction received")
+    if (interaction.isAutocomplete()){
+        const focusedOption = interaction.options.getFocused(true);
+        const optionName = focusedOption.name;
+        const typed = focusedOption.value;
+
+        const fetcher = autocompleteSources[optionName];
+        if (!fetcher) return; // nothing to suggest
+
+        const items = await fetcher(); // array of strings
+        const choices = items
+            .filter(item => item.toLowerCase().includes(typed.toLowerCase()))
+            .slice(0, 25)
+            .map(item => ({ name: item, value: item }));
+
+        await interaction.respond(choices);
+        return;
+    }
+
     if (!interaction.isChatInputCommand()) return;
 
     const command = client.commands.get(interaction.commandName);

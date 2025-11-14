@@ -5,12 +5,12 @@ module.exports = {
   data: new SlashCommandBuilder()
     .setName('setdate')
     .setDescription('Set a campaign to a specific date')
-    .addStringOption(o => o.setName('campaign').setDescription('campaign name').setRequired(true))
+    .addStringOption(o => o.setName('campaign').setDescription('campaign name').setRequired(true).setAutocomplete(true))
     .addIntegerOption(o => o.setName('year').setDescription('year').setRequired(true))
     .addIntegerOption(o => o.setName('monthindex').setDescription('month index (0 = first)').setRequired(true))
     .addIntegerOption(o => o.setName('day').setDescription('day in month').setRequired(true)),
   async execute(interaction) {
-    const name = interaction.options.getString('campaign').toLowerCase();
+    const name = interaction.options.getString('campaign');
     const year = interaction.options.getInteger('year');
     const monthIndex = interaction.options.getInteger('monthindex');
     const day = interaction.options.getInteger('day');

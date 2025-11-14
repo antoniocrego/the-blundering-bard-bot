@@ -18,7 +18,7 @@ CREATE TABLE IF NOT EXISTS campaigns (
 
 -- Insert the Gehenna calendar structure
 INSERT INTO structures (name, data) VALUES (
-    'gehenna',
+    'Miaom',
     '{
         "months": [
             { "name": "Luminara", "length": 44 },
@@ -32,10 +32,35 @@ INSERT INTO structures (name, data) VALUES (
             { "name": "Pantheonix", "length": 52 }
         ],
         "weekdays": ["Nephira", "Tartalion", "Chronor", "Zephyris", "Azuran", "Barnadun", "Mythorian"],
+        "starting_weekday": 2
+    }'::jsonb
+)
+ON CONFLICT (name) DO NOTHING;
+
+-- Insert the Gregorian calendar structure
+INSERT INTO structures (name, data) VALUES (
+    'Gregorian',
+    '{
+        "months": [
+            { "name": "January", "length": 31 },
+            { "name": "February", "length": 28 },
+            { "name": "March", "length": 31 },
+            { "name": "April", "length": 30 },
+            { "name": "May", "length": 31 },
+            { "name": "June", "length": 30 },
+            { "name": "July", "length": 31 },
+            { "name": "August", "length": 31 },
+            { "name": "September", "length": 30 },
+            { "name": "October", "length": 31 },
+            { "name": "November", "length": 30 },
+            { "name": "December", "length": 31 }
+        ],
+        "weekdays": ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"],
         "starting_weekday": 0
     }'::jsonb
 )
 ON CONFLICT (name) DO NOTHING;
+
 
 -- Create an index for faster campaign lookups
 CREATE INDEX IF NOT EXISTS idx_campaigns_name ON campaigns(name);
