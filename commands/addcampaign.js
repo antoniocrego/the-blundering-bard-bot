@@ -9,13 +9,13 @@ module.exports = {
     .addStringOption(opt =>
       opt.setName('structure')
          .setDescription('Calendar structure for this campaign')
-         .setRequired(false)
+         .setRequired(true)
          .setAutocomplete(true)
     ),
   async execute(interaction) {
     const raw = interaction.options.getString('name');
     //const name = raw.toLowerCase().replace(/\s+/g, '_');
-    const structure = interaction.options.getString('structure') || 'Miaom';
+    const structure = interaction.options.getString('structure');
 
     if (await loadCampaignCalendar(raw)) {
       return interaction.reply({ content: `A campaign named **${raw}** already exists.`, ephemeral: true });

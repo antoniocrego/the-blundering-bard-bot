@@ -1,5 +1,5 @@
 const { SlashCommandBuilder } = require('discord.js');
-const { loadCampaignCalendarWithStructure, saveCampaignCalendar, setDate, weekdayFor } = require('../lib/calendar');
+const { loadCampaignCalendarWithStructure, saveCampaignCalendar, setDate, getCurrentDate } = require('../lib/calendar');
 
 module.exports = {
   data: new SlashCommandBuilder()
@@ -21,9 +21,8 @@ module.exports = {
     try {
       setDate(c, year, monthIndex, day);
       await saveCampaignCalendar(name, c);
-      const monthName = c.months[c.monthIndex].name;
-      const { name: weekdayName } = weekdayFor(c);
-      await interaction.reply(`✅ ${name} set to ${c.day} ${monthName}, Year ${c.year} — **${weekdayName}**`);
+      const currentDateString = getCurrentDate(c);
+      await interaction.reply(`✅ ${name} set to ` + currentDateString);
     } catch (err) {
       return interaction.reply({ content: `Error: ${err.message}`, ephemeral: true });
     }

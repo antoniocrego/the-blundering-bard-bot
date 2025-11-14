@@ -32,7 +32,10 @@ INSERT INTO structures (name, data) VALUES (
             { "name": "Pantheonix", "length": 52 }
         ],
         "weekdays": ["Nephira", "Tartalion", "Chronor", "Zephyris", "Azuran", "Barnadun", "Mythorian"],
-        "starting_weekday": 2
+        "starting_weekday": 2,
+        "moons": [
+            { "name": "Luna", "cycleLength": 29, "offset": 0}
+        ]
     }'::jsonb
 )
 ON CONFLICT (name) DO NOTHING;
@@ -56,7 +59,10 @@ INSERT INTO structures (name, data) VALUES (
             { "name": "December", "length": 31 }
         ],
         "weekdays": ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"],
-        "starting_weekday": 0
+        "starting_weekday": 0,
+        "moons": [
+            { "name": "The Moon", "cycleLength": 29, "offset": 0}
+        ]
     }'::jsonb
 )
 ON CONFLICT (name) DO NOTHING;

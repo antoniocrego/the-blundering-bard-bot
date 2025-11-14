@@ -30,7 +30,6 @@ const autocompleteSources = {
 }
 
 client.on('interactionCreate', async (interaction) => {
-    console.log("interaction received")
     if (interaction.isAutocomplete()){
         const focusedOption = interaction.options.getFocused(true);
         const optionName = focusedOption.name;

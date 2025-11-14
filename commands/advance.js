@@ -1,15 +1,15 @@
 const { SlashCommandBuilder } = require('discord.js');
-const { loadCampaignCalendarWithStructure, saveCampaignCalendar, advanceByDays, weekdayFor } = require('../lib/calendar');
+const { loadCampaignCalendarWithStructure, saveCampaignCalendar, advanceByDays, weekdayFor, getCurrentDate } = require('../lib/calendar');
 
 module.exports = {
   data: new SlashCommandBuilder()
     .setName('advance')
     .setDescription('Advance a campaign by N days')
     .addStringOption(o => o.setName('campaign').setDescription('campaign name').setRequired(true).setAutocomplete(true))
-    .addIntegerOption(o => o.setName('days').setDescription('number of days').setRequired(true)),
+    .addIntegerOption(o => o.setName('days').setDescription('number of days').setRequired(false)),
   async execute(interaction) {
     const name = interaction.options.getString('campaign');
-    const days = interaction.options.getInteger('days');
+    const days = interaction.options.getInteger('days') || 1;
 
     const c = await loadCampaignCalendarWithStructure(name);
     if (!c) return interaction.reply({ content: `Campaign ${name} not found.`, ephemeral: true });
@@ -18,9 +18,8 @@ module.exports = {
     advanceByDays(c, days);
     await saveCampaignCalendar(name, c);
 
-    const monthName = c.months[c.monthIndex].name;
-    const { name: weekdayName } = weekdayFor(c);
+    const newDateString = getCurrentDate(c);
 
-    await interaction.reply(`⏩ Advanced **${name}** by **${days}** days. New date: ${c.day} ${monthName}, Year ${c.year} — **${weekdayName}**`);
+    await interaction.reply(`⏩ Advanced **${name}** by **${days}** day(s). It is now ` + newDateString);
   }
 };
