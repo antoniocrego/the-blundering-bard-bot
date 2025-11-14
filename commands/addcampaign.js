@@ -10,23 +10,26 @@ module.exports = {
     const raw = interaction.options.getString('name');
     const name = raw.toLowerCase().replace(/\s+/g, '_');
 
-    if (loadCampaignCalendar(name)) {
+    if (await loadCampaignCalendar(name)) {
       return interaction.reply({ content: `A campaign named **${name}** already exists.`, ephemeral: true });
     }
 
-    createCampaignCalendar(name, {
-      year: 1,
-      monthIndex: 0,
-      day: 1,
-      months: [
-        { name: 'Primus', length: 30 },
-        { name: 'Secundus', length: 30 },
-        { name: 'Tertius', length: 30 }
-      ],
-      weekdays: ['Sol', 'Lun', 'Mar', 'Mer', 'Jov', 'Ven'],
-      startingWeekday: 0
-    });
+    try {
+      const result = await createCampaignCalendar(name, {
+        structure: 'gehenna',
+        year: 1,
+        monthIndex: 0,
+        day: 1
+      });
 
-    await interaction.reply(`🌟 Campaign **${name}** created (3×30-day months, 6-day week).`);
+      if (typeof result === 'string' && result.includes('must first define')) {
+        return interaction.reply({ content: `❌ ${result}`, ephemeral: true });
+      }
+
+      await interaction.reply(`🌟 Campaign **${name}** created with Gehenna calendar structure.`);
+    } catch (err) {
+      console.error('Error creating campaign:', err);
+      return interaction.reply({ content: `❌ Error creating campaign: ${err.message}`, ephemeral: true });
+    }
   }
 };

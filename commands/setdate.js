@@ -15,12 +15,12 @@ module.exports = {
     const monthIndex = interaction.options.getInteger('monthindex');
     const day = interaction.options.getInteger('day');
 
-    const c = loadCampaignCalendarWithStructure(name);
+    const c = await loadCampaignCalendarWithStructure(name);
     if (!c) return interaction.reply({ content: `Campaign ${name} not found.`, ephemeral: true });
 
     try {
       setDate(c, year, monthIndex, day);
-      saveCampaignCalendar(name, c);
+      await saveCampaignCalendar(name, c);
       const monthName = c.months[c.monthIndex].name;
       const { name: weekdayName } = weekdayFor(c);
       await interaction.reply(`✅ ${name} set to ${c.day} ${monthName}, Year ${c.year} — **${weekdayName}**`);
