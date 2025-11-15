@@ -46,7 +46,7 @@ module.exports = {
         const role = interaction.options.getMentionable('role');
         if (!role || !role.id) return interaction.editReply('Please specify a role to trigger the scheduler for.');
 
-        const sched = await db.getScheduler(interaction.guildId, role.id);
+        const sched = await db.getSchedulerForRole(interaction.guildId, role.id);
         if (!sched) return interaction.editReply(`No scheduler configured for <@&${role.id}>.`);
 
         // compute next Monday
