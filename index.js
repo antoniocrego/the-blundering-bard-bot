@@ -51,6 +51,9 @@ client.on('ready', () => {
     }, { timezone: 'Europe/Stockholm' });
 });
 
+const PORT = process.env.PORT || 3000;
+require('http').createServer((req,res)=>res.end('Bot is alive')).listen(PORT, () => console.log(`Listening on ${PORT}`));
+
 const autocompleteSources = {
     campaign: listCampaignCalendars,
     structure: listCalendarStructures
