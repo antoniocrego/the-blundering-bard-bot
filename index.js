@@ -55,14 +55,6 @@ client.on('ready', () => {
 const PORT = process.env.PORT || 3000;
 require('http').createServer((req,res)=>res.end('Bot is alive')).listen(PORT, () => console.log(`Listening on ${PORT}`));
 
-function keepAlive() {
-    var httpRequest = new XMLHttpRequest();
-    httpRequest.open('GET', "/restricted_file_url");
-    httpRequest.send(null);
-}
-
-setInterval(keepAlive, 840000);  //My session expires at 15 minutes
-
 const autocompleteSources = {
     campaign: listCampaignCalendars,
     structure: listCalendarStructures
