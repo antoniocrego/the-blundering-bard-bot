@@ -7,7 +7,7 @@ module.exports = {
 
   async execute(interaction) {
     // 1/1000 chance
-    const roll = Math.floor(Math.random() * 1000);
+    const roll = Math.floor(Math.random() * 2);
 
     if (roll === 0) {
       return interaction.reply('Fuck you 😡'); // the rare rude response
